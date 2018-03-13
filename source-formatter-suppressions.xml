@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<suppressions>
+	<checkstyle>
+		<suppress checks="ParsePrimitiveTypeCheck" files="src/main/java/com/github/ithildir/frontpage/geo/impl/BingGeocoderImpl\.java" />
+		<suppress checks="ParsePrimitiveTypeCheck" files="src/main/java/com/github/ithildir/frontpage/util/ConfigurationHelper\.java" />
+	</checkstyle>
+	<source-check>
+		<suppress checks="JavaDeserializationSecurityCheck" files="src/main/java/com/github/ithildir/frontpage/cache/impl/RedisCacheImpl\.java" />
+	</source-check>
+</suppressions>

@@ -1,0 +1,13 @@
+{
+	"dependencies": {
+		"serverless-plugin-additional-stacks": "^1.1.0"
+	},
+	"devDependencies": {
+		"serverless-sam": "0.0.5",
+		"yml-sorter": "^1.0.1"
+	},
+	"name": "frontpage",
+	"scripts": {
+		"format": "yml-sorter --input serverless.yml"
+	}
+}

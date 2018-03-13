@@ -1,0 +1,13 @@
+/.apt_generated/
+/.classpath
+/.factorypath
+/.gradle/
+/.project
+/.serverless/
+/.settings/
+/bin/
+/build/
+/local.json
+/node_modules/
+/template.yml
+/tmp/

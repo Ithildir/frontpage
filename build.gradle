@@ -1,0 +1,180 @@
+import com.moowork.gradle.node.npm.NpmTask
+
+import de.undercouch.gradle.tasks.download.Download
+
+import org.gradle.plugins.ide.eclipse.model.SourceFolder
+
+plugins {
+	id "com.fizzed.rocker" version "0.24.0"
+	id "com.liferay.source.formatter" version "2.3.97"
+	id "de.undercouch.download" version "3.4.2"
+	id "jacoco"
+	id "java"
+	id "com.moowork.node" version "1.2.0"
+	id "net.ltgt.apt-eclipse" version "0.15"
+	id "org.hidetake.swagger.generator" version "2.11.0"
+}
+
+task buildZip(type: Zip)
+task downloadSwaggerBot(type: Download)
+task fixSwaggerBotCode
+task formatYaml(type: NpmTask)
+
+sourceCompatibility = "1.8"
+
+group = "com.github.ithildir"
+
+String rockerSrcDirName = "src/main/rocker"
+File swaggerBotFile = new File(buildDir, "swagger-bot.json")
+String swaggerBotPackage = "com.github.ithildir.frontpage.model"
+String swaggerBotPrefix = "Bot"
+
+build {
+	dependsOn buildZip
+}
+
+buildZip {
+	from sourceSets.main.output
+
+	into("lib") {
+		from configurations.runtime
+	}
+}
+
+check {
+	dependsOn checkSourceFormatting
+}
+
+compileJava {
+	dependsOn generateSwaggerCode
+}
+
+dependencies {
+	annotationProcessor group: "com.google.dagger", name: "dagger-compiler", version: "2.15"
+
+	compile group: "com.aerse", name: "yaCSV", version: "1.2"
+	compile group: "com.amazonaws", name: "aws-java-sdk-dynamodb", version: "1.11.313"
+	compile group: "com.amazonaws", name: "aws-java-sdk-sns", version: "1.11.313"
+	compile group: "com.amazonaws", name: "aws-lambda-java-core", version: "1.2.0"
+	compile group: "com.amazonaws", name: "aws-lambda-java-events", version: "2.1.0"
+	compile group: "com.amazonaws", name: "aws-lambda-java-log4j", version: "1.0.0"
+	compile group: "com.auth0", name: "java-jwt", version: "3.3.0"
+	compile group: "com.auth0", name: "jwks-rsa", version: "0.3.0"
+	compile group: "com.fasterxml.jackson.datatype", name: "jackson-datatype-jsr310", version: "2.9.4"
+	compile group: "com.fizzed", name: "rocker-runtime", version: "0.24.0"
+	compile group: "com.github.shyiko.dotenv", name: "dotenv", version: "0.1.1"
+	compile group: "com.google.dagger", name: "dagger", version: "2.15"
+	compile group: "com.timgroup", name: "jgravatar", version: "1.1"
+	compile group: "io.swagger", name: "swagger-annotations", version: "1.5.18"
+	compile group: "pl.touk", name: "throwing-function", version: "1.3"
+	compile group: "redis.clients", name: "jedis", version: "2.9.0"
+
+	swaggerCodegen group: "io.swagger", name: "swagger-codegen-cli", version: "2.3.1"
+
+	testCompile group: "ai.grakn", name: "redis-mock", version: "0.1.6"
+	testCompile group: "cloud.localstack", name: "localstack-utils", version: "0.1.13"
+	testCompile group: "junit", name: "junit", version: "4.12"
+	testCompile group: "org.unitils", name: "unitils-core", version: "3.4.6"
+}
+
+downloadSwaggerBot {
+	dest swaggerBotFile
+	overwrite false
+	src "https://docs.botframework.com/en-us/restapi/directline3/swagger.json"
+}
+
+eclipse {
+	classpath {
+		file.beforeMerged {
+			classpath ->
+
+			classpath.entries.add new SourceFolder(rockerSrcDirName, null)
+		}
+	}
+}
+
+fixSwaggerBotCode {
+	doLast {
+		String dirName = swaggerBotPackage.replace('.' as char, '/' as char)
+
+		for (String name in ["HeroCard"]) {
+			File codeFile = new File(generateSwaggerCodeBot.outputDir, "src/main/java/${dirName}/${swaggerBotPrefix}${name}.java")
+
+			String content = codeFile.getText("UTF-8")
+
+			content = content.replace("class ${swaggerBotPrefix}${name} {", "class ${swaggerBotPrefix}${name} extends ${swaggerBotPrefix}Object {")
+
+			codeFile.setText content, "UTF-8"
+		}
+	}
+}
+
+formatSource {
+	dependsOn formatYaml
+}
+
+formatYaml {
+	args = ["run", "format"]
+	dependsOn npmInstall
+}
+
+generateSwaggerCode {
+	dependsOn downloadSwaggerBot
+}
+
+jacocoTestReport {
+	doFirst {
+		classDirectories = files(classDirectories.files.collect {
+				fileTree dir: it, excludes: ["**/*_*Factory*", "com/github/ithildir/frontpage/**/di/*", "com/github/ithildir/frontpage/model/Bot*", "com/github/ithildir/frontpage/views/*"]
+			})
+	}
+
+	reports {
+		xml.enabled = true
+	}
+}
+
+repositories {
+	jcenter()
+}
+
+rocker {
+	optimize = true
+	outputBaseDirectory = new File(buildDir, "generated/source/rocker")
+	skipTouch = true
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir {
+				new File(swaggerSources.bot.code.outputDir, "src/main/java")
+			}
+		}
+
+		resources {
+			srcDir {
+				new File(swaggerSources.bot.code.outputDir, "src/main/resources")
+			}
+		}
+
+		rocker {
+			srcDir rockerSrcDirName
+		}
+	}
+}
+
+swaggerSources {
+	bot {
+		code {
+			components = ["models"]
+			configFile = file("swagger-config.json")
+			finalizedBy fixSwaggerBotCode
+			language = "java"
+			library = "feign"
+			rawOptions = ["--model-name-prefix", swaggerBotPrefix, "--model-package", swaggerBotPackage]
+		}
+
+		inputFile = swaggerBotFile
+	}
+}

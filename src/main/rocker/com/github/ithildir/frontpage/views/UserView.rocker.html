@@ -1,0 +1,46 @@
+@import com.github.ithildir.frontpage.util.LanguageHelper
+
+@import java.util.Map
+
+@args (LanguageHelper languageHelper, String viewTitle, String userId, String greeting, String subtitle, String avatarUrl, Map<String, String> links, String botDirectLineToken)
+
+@extraCSS => {
+	<link href="https://cdn.botframework.com/botframework-webchat/latest/botchat.css" rel="stylesheet" />
+}
+
+@com.github.ithildir.frontpage.views.BaseView.template(viewTitle, extraCSS, RockerContent.NONE) -> {
+	<div>
+		<div>
+			<div id="avatar" style="background-image: url(@avatarUrl);"></div>
+
+			<h1>@greeting</h1>
+			<h2>@subtitle</h2>
+
+			<ul>
+				@for ((key, url) : links) {
+					<li class="icon-@key">@raw(url)</li>
+				}
+			</ul>
+
+			<div id="bot" />
+
+			<script src="https://cdn.botframework.com/botframework-webchat/latest/botchat.js"></script>
+
+			<script>
+				BotChat.App(
+					{
+						directLine: {
+							token: '@botDirectLineToken'
+						},
+						resize: 'none',
+						user: {
+							id: '@userId',
+							name: '@languageHelper.get("you")'
+						}
+					},
+					document.getElementById('bot')
+				);
+			</script>
+		</div>
+	</div>
+}

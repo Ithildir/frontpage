@@ -1,0 +1,20 @@
+{
+	"channelId": "channel's name/id",
+	"conversation": {
+		"id": "abcd1234",
+		"name": "conversation's name"
+	},
+	"from": {
+		"id": "1234abcd",
+		"name": "user's name"
+	},
+	"id": "bf3cc9a2f5de...",
+	"recipient": {
+		"id": "12345678",
+		"name": "bot's name"
+	},
+	"serviceUrl": "https://smba.trafficmanager.net/apis",
+	"text": "Haircut on Saturday",
+	"timestamp": "2016-10-19T20:17:52.2891902Z",
+	"type": "message"
+}

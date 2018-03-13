@@ -1,0 +1,29 @@
+{
+	"_text": "how many people between Tuesday and Friday",
+	"entities": {
+		"datetime": [
+			{
+				"confidence": 1,
+				"value": {
+					"from": "2014-07-01T00:00:00.000-07:00",
+					"to": "2014-07-02T00:00:00.000-07:00"
+				}
+			},
+			{
+				"confidence": 1,
+				"value": {
+					"from": "2014-07-04T00:00:00.000-07:00",
+					"to": "2014-07-05T00:00:00.000-07:00"
+				}
+			}
+		],
+		"metric": [
+			{
+				"confidence": 0.9231,
+				"metadata": "{'code': 324}",
+				"value": "metric_visitor"
+			}
+		]
+	},
+	"msg_id": "387b8515-0c1d-42a9-aa80-e68b66b66c27"
+}
