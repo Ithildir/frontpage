@@ -49,11 +49,6 @@ functions:
                 - ':UserBotReply'
           topicName: UserBotReply
     handler: com.github.ithildir.frontpage.aws.SendUserBotReplyRequestHandler
-  updateNLPProgrammingLanguageEntity:
-    events:
-      - schedule: rate(7 days)
-    handler: >-
-      com.github.ithildir.frontpage.aws.UpdateNLPProgrammingLanguageEntityRequestHandler
 package:
   artifact: build/distributions/frontpage.zip
 plugins:

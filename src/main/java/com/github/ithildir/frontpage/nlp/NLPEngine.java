@@ -29,6 +29,4 @@ public interface NLPEngine {
 
 	public NLPMessage interpret(String text) throws Exception;
 
-	public void updateEntity(String key, String[] value) throws Exception;
-
 }

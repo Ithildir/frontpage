@@ -27,12 +27,11 @@ import com.github.ithildir.frontpage.functions.AcceptUserBotMessageBiConsumer;
 import com.github.ithildir.frontpage.functions.GetUserHomeViewBiConsumer;
 import com.github.ithildir.frontpage.functions.ProcessUserLinkedInBiConsumer;
 import com.github.ithildir.frontpage.functions.SendUserBotReplyConsumer;
-import com.github.ithildir.frontpage.functions.UpdateNLPProgrammingLanguageEntityRunnable;
 import com.github.ithildir.frontpage.user.intent.di.UserIntentModule;
 
-import dagger.Component;
-
 import javax.inject.Singleton;
+
+import dagger.Component;
 
 /**
  * @author Andrea Di Giorgi
@@ -53,9 +52,6 @@ public interface FrontpageComponent {
 	public ProcessUserLinkedInBiConsumer getProcessUserLinkedInBiConsumer();
 
 	public SendUserBotReplyConsumer getSendUserBotReplyConsumer();
-
-	public UpdateNLPProgrammingLanguageEntityRunnable
-		getUpdateNLPProgrammingLanguageEntityRunnable();
 
 	public GetUserHomeViewBiConsumer getUserHomeViewBiConsumer();
 
