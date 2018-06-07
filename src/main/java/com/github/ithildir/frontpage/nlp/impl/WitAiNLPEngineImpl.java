@@ -26,10 +26,13 @@ import com.github.ithildir.frontpage.http.HttpClient;
 import com.github.ithildir.frontpage.nlp.NLPEngine;
 import com.github.ithildir.frontpage.nlp.NLPMessage;
 import com.github.ithildir.frontpage.util.JsonHelper;
+
 import com.google.common.net.HttpHeaders;
 
 import java.net.URLEncoder;
+
 import java.nio.charset.StandardCharsets;
+
 import java.util.Collections;
 import java.util.Objects;
 

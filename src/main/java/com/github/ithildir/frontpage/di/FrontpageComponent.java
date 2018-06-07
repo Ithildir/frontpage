@@ -29,9 +29,9 @@ import com.github.ithildir.frontpage.functions.ProcessUserLinkedInBiConsumer;
 import com.github.ithildir.frontpage.functions.SendUserBotReplyConsumer;
 import com.github.ithildir.frontpage.user.intent.di.UserIntentModule;
 
-import javax.inject.Singleton;
-
 import dagger.Component;
+
+import javax.inject.Singleton;
 
 /**
  * @author Andrea Di Giorgi
